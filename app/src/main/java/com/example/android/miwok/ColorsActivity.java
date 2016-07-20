@@ -26,6 +26,14 @@ import java.util.ArrayList;
 
 public class ColorsActivity extends AppCompatActivity {
     private MediaPlayer miwokColorsAudio;
+
+    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +58,20 @@ public class ColorsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                releaseMediaPlayer();
                 miwokColorsAudio = MediaPlayer.create(ColorsActivity.this, colorWords.get(position).getAudioResourceID());
                 miwokColorsAudio.start();
+
+                // Clean up resources
+                miwokColorsAudio.setOnCompletionListener(mCompletionListener);
             }
         });
+    }
+
+    private void releaseMediaPlayer(){
+        if (miwokColorsAudio != null){
+            miwokColorsAudio.release();
+            miwokColorsAudio = null;
+        }
     }
 }

@@ -26,6 +26,14 @@ import java.util.ArrayList;
 
 public class FamilyActivity extends AppCompatActivity {
     private MediaPlayer miwokFamilyAudio;
+
+    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +60,20 @@ public class FamilyActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                releaseMediaPlayer();
                 miwokFamilyAudio = MediaPlayer.create(FamilyActivity.this, familyWords.get(position).getAudioResourceID());
                 miwokFamilyAudio.start();
+
+                // Clean up resources
+                miwokFamilyAudio.setOnCompletionListener(mCompletionListener);
             }
         });
+    }
+
+    private void releaseMediaPlayer(){
+        if (miwokFamilyAudio != null){
+            miwokFamilyAudio.release();
+            miwokFamilyAudio = null;
+        }
     }
 }
