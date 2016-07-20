@@ -15,6 +15,8 @@
  */
 package com.example.android.miwok;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +29,28 @@ import java.util.ArrayList;
 public class ColorsActivity extends AppCompatActivity {
     private MediaPlayer miwokColorsAudio;
 
+    // Controls audio focus in the numbers activity
+    private AudioManager mAudioManager;
+
+    // Creating an instance of the change listener and modify the focus change
+    AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                public void onAudioFocusChange(int focusChange) {
+                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                        // Pause playback
+                        miwokColorsAudio.pause();
+                        miwokColorsAudio.seekTo(0);
+                    }
+                    else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                        // Resume playback
+                        miwokColorsAudio.start();
+                    }
+                    else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                        releaseMediaPlayer();
+                    }
+                }
+            };
+
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -38,6 +62,9 @@ public class ColorsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_numbers);
+
+        // Initialize the audio manager
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // Colors
         final ArrayList<Word> colorWords = new ArrayList<Word>();
@@ -59,19 +86,37 @@ public class ColorsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 releaseMediaPlayer();
-                miwokColorsAudio = MediaPlayer.create(ColorsActivity.this, colorWords.get(position).getAudioResourceID());
-                miwokColorsAudio.start();
 
-                // Clean up resources
-                miwokColorsAudio.setOnCompletionListener(mCompletionListener);
+                // Request audio focus for playback
+                int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+                        // Use the music stream.
+                        AudioManager.STREAM_MUSIC,
+                        // Request permanent focus.
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    // Start playback.
+                    miwokColorsAudio = MediaPlayer.create(ColorsActivity.this, colorWords.get(position).getAudioResourceID());
+                    miwokColorsAudio.start();
+
+                    // Clean up resources
+                    miwokColorsAudio.setOnCompletionListener(mCompletionListener);
+                }
             }
         });
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        releaseMediaPlayer();
     }
 
     private void releaseMediaPlayer(){
         if (miwokColorsAudio != null){
             miwokColorsAudio.release();
             miwokColorsAudio = null;
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
         }
     }
 }

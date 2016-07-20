@@ -15,6 +15,8 @@
  */
 package com.example.android.miwok;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +29,28 @@ import java.util.ArrayList;
 public class PhrasesActivity extends AppCompatActivity {
     private MediaPlayer miwokPhrasesAudio;
 
+    // Controls audio focus in the numbers activity
+    private AudioManager mAudioManager;
+
+    // Creating an instance of the change listener and modify the focus change
+    AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                public void onAudioFocusChange(int focusChange) {
+                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                        // Pause playback
+                        miwokPhrasesAudio.pause();
+                        miwokPhrasesAudio.seekTo(0);
+                    }
+                    else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                        // Resume playback
+                        miwokPhrasesAudio.start();
+                    }
+                    else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                        releaseMediaPlayer();
+                    }
+                }
+            };
+
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -38,6 +62,9 @@ public class PhrasesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_numbers);
+
+        // Initialize the audio manager
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // Phrases
         final ArrayList<Word> phrases = new ArrayList<Word>();
@@ -61,19 +88,37 @@ public class PhrasesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 releaseMediaPlayer();
-                miwokPhrasesAudio = MediaPlayer.create(PhrasesActivity.this, phrases.get(position).getAudioResourceID());
-                miwokPhrasesAudio.start();
 
-                // Clean up resources
-                miwokPhrasesAudio.setOnCompletionListener(mCompletionListener);
+                // Request audio focus for playback
+                int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+                        // Use the music stream.
+                        AudioManager.STREAM_MUSIC,
+                        // Request permanent focus.
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    // Start playback.
+                    miwokPhrasesAudio = MediaPlayer.create(PhrasesActivity.this, phrases.get(position).getAudioResourceID());
+                    miwokPhrasesAudio.start();
+
+                    // Clean up resources
+                    miwokPhrasesAudio.setOnCompletionListener(mCompletionListener);
+                }
             }
         });
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        releaseMediaPlayer();
     }
 
     private void releaseMediaPlayer(){
         if (miwokPhrasesAudio != null){
             miwokPhrasesAudio.release();
             miwokPhrasesAudio = null;
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
         }
     }
 }
