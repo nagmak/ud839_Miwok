@@ -8,22 +8,25 @@ public class Word {
     private String mDefaultTranslation;
     private int mImageResourceID = NO_IMAGE;
     private static final int NO_IMAGE = -1;
+    private int mAudioResourceID;
 
     /*
     * Constructor for image + words
     * */
-    public Word(String mMiwokTranslation, String mDefaultTranslation, int mImageResourceID){
+    public Word(String mMiwokTranslation, String mDefaultTranslation, int mImageResourceID, int mAudioResourceID){
         this.mMiwokTranslation = mMiwokTranslation;
         this.mDefaultTranslation = mDefaultTranslation;
         this.mImageResourceID = mImageResourceID;
+        this.mAudioResourceID = mAudioResourceID;
     }
 
     /**
      * Constructor for just words
      * */
-    public Word(String mMiwokTranslation, String mDefaultTranslation){
+    public Word(String mMiwokTranslation, String mDefaultTranslation, int mAudioResourceID){
         this.mMiwokTranslation = mMiwokTranslation;
         this.mDefaultTranslation = mDefaultTranslation;
+        this.mAudioResourceID = mAudioResourceID;
     }
 
     /**
@@ -48,4 +51,6 @@ public class Word {
     public boolean hasImage(){
         return mImageResourceID != NO_IMAGE;
     }
+
+    public int getAudioResourceID(){ return mAudioResourceID; }
 }
