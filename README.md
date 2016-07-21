@@ -1,5 +1,10 @@
 Miwok App
 ===================================
+![Alt Text](/Users/nagma/Documents/CSProgramming/version-control/ud839_Miwok/ScreenShot1.png "Miwok Main Page")
+![Alt Text](/Users/nagma/Documents/CSProgramming/version-control/ud839_Miwok/ScreenShot2.png)
+![Alt Text](/Users/nagma/Documents/CSProgramming/version-control/ud839_Miwok/ScreenShot3.png)
+![Alt Text](/Users/nagma/Documents/CSProgramming/version-control/ud839_Miwok/ScreenShot4.png)
+![Alt Text](/Users/nagma/Documents/CSProgramming/version-control/ud839_Miwok/ScreenShot5.png)
 
 This app displays lists of vocabulary words for the user to learn the Miwok language.
 Used in a Udacity course in the Beginning Android Nanodegree.
