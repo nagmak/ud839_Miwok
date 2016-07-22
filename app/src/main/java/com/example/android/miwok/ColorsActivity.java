@@ -27,12 +27,13 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class ColorsActivity extends AppCompatActivity {
+    // Controls audio playback
     private MediaPlayer miwokColorsAudio;
 
-    // Controls audio focus in the numbers activity
+    // Controls audio focus
     private AudioManager mAudioManager;
 
-    // Creating an instance of the change listener and modify the focus change
+    // Controls playback according to audio focus
     AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener =
             new AudioManager.OnAudioFocusChangeListener() {
                 public void onAudioFocusChange(int focusChange) {
@@ -51,6 +52,7 @@ public class ColorsActivity extends AppCompatActivity {
                 }
             };
 
+    // Listens for completion of audio file, then releases the MediaPlayer
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -66,7 +68,7 @@ public class ColorsActivity extends AppCompatActivity {
         // Initialize the audio manager
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        // Colors
+        // Miwok and Default (English) Colors vocab list
         final ArrayList<Word> colorWords = new ArrayList<Word>();
         colorWords.add(new Word("weṭeṭṭi", "red", R.drawable.color_red, R.raw.color_red));
         colorWords.add(new Word("chokokki", "green", R.drawable.color_green, R.raw.color_green));
@@ -81,7 +83,7 @@ public class ColorsActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(colorAdapter);
 
-        // Audio
+        // Audio playback when user clicks the TextView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

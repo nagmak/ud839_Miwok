@@ -32,12 +32,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class NumbersActivity extends AppCompatActivity {
+    // Controls audio playback
     private MediaPlayer miwokNumberAudio;
 
-    // Controls audio focus in the numbers activity
+    // Controls audio focus
     private AudioManager mAudioManager;
 
-    // Creating an instance of the change listener and modify the focus change
+    // Controls playback according to audio focus
     AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener =
             new AudioManager.OnAudioFocusChangeListener() {
                 public void onAudioFocusChange(int focusChange) {
@@ -56,6 +57,7 @@ public class NumbersActivity extends AppCompatActivity {
                 }
             };
 
+    // Listens for completion of audio file, then releases the MediaPlayer
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -71,7 +73,7 @@ public class NumbersActivity extends AppCompatActivity {
         // Initialize the audio manager
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        // Numbers
+        // Miwok and Default (English) Numbers vocab list
         final ArrayList<Word> words = new ArrayList<Word>();
         words.add(new Word("lutti", "one", R.drawable.number_one, R.raw.number_one));
         words.add(new Word("otiiko", "two", R.drawable.number_two, R.raw.number_two));
@@ -88,7 +90,7 @@ public class NumbersActivity extends AppCompatActivity {
         final ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(itemsAdapter);
 
-        // Audio
+        // Audio playback when user clicks the TextView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

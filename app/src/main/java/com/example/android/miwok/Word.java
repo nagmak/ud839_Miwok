@@ -13,20 +13,20 @@ public class Word {
     /*
     * Constructor for image + words
     * */
-    public Word(String mMiwokTranslation, String mDefaultTranslation, int mImageResourceID, int mAudioResourceID){
-        this.mMiwokTranslation = mMiwokTranslation;
-        this.mDefaultTranslation = mDefaultTranslation;
-        this.mImageResourceID = mImageResourceID;
-        this.mAudioResourceID = mAudioResourceID;
+    public Word(String miwokTranslation, String defaultTranslation, int imageResourceID, int audioResourceID){
+        this.mMiwokTranslation = miwokTranslation;
+        this.mDefaultTranslation = defaultTranslation;
+        this.mImageResourceID = imageResourceID;
+        this.mAudioResourceID = audioResourceID;
     }
 
     /**
      * Constructor for just words
      * */
-    public Word(String mMiwokTranslation, String mDefaultTranslation, int mAudioResourceID){
-        this.mMiwokTranslation = mMiwokTranslation;
-        this.mDefaultTranslation = mDefaultTranslation;
-        this.mAudioResourceID = mAudioResourceID;
+    public Word(String miwokTranslation, String defaultTranslation, int audioResourceID){
+        this.mMiwokTranslation = miwokTranslation;
+        this.mDefaultTranslation = defaultTranslation;
+        this.mAudioResourceID = audioResourceID;
     }
 
     /**
@@ -48,9 +48,15 @@ public class Word {
     * */
     public int getImageResourceID(){ return mImageResourceID; }
 
+    /*
+    * Checks if the Image exists for the current word
+    * */
     public boolean hasImage(){
         return mImageResourceID != NO_IMAGE;
     }
 
+    /*
+    * Returns the Audio resource ID for the current word
+    * */
     public int getAudioResourceID(){ return mAudioResourceID; }
 }

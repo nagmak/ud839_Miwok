@@ -27,12 +27,13 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class FamilyActivity extends AppCompatActivity {
+    // Controls audio playback
     private MediaPlayer miwokFamilyAudio;
 
-    // Controls audio focus in the numbers activity
+    // Controls audio focus
     private AudioManager mAudioManager;
 
-    // Creating an instance of the change listener and modify the focus change
+    // Controls playback according to audio focus
     AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener =
             new AudioManager.OnAudioFocusChangeListener() {
                 public void onAudioFocusChange(int focusChange) {
@@ -51,6 +52,7 @@ public class FamilyActivity extends AppCompatActivity {
                 }
             };
 
+    // Listens for completion of audio file, then releases the MediaPlayer
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -66,7 +68,7 @@ public class FamilyActivity extends AppCompatActivity {
         // Initialize the audio manager
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        // Family members
+        // Miwok and Default (English) Family Members vocab list
         final ArrayList<Word> familyWords =  new ArrayList<Word>();
         familyWords.add(new Word("әpә", "father", R.drawable.family_father, R.raw.family_father));
         familyWords.add(new Word("әṭa", "mother", R.drawable.family_mother, R.raw.family_mother));
@@ -83,7 +85,7 @@ public class FamilyActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(familyAdapter);
 
-        // Audio
+        // Audio playback when user clicks the TextView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

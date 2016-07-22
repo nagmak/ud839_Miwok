@@ -45,6 +45,7 @@ public class WordAdapter extends ArrayAdapter<Word> {
         TextView defaultTextView = (TextView) listItemView.findViewById(R.id.default_text_view);
         defaultTextView.setText(currentWord.getDefaultWord());
 
+        // Returns corresponding image onto the user screen
         ImageView miwokImageView = (ImageView) listItemView.findViewById(R.id.image);
 
         if (currentWord.hasImage()){
@@ -56,7 +57,7 @@ public class WordAdapter extends ArrayAdapter<Word> {
             miwokImageView.setVisibility(View.GONE);
         }
 
-        // Colors
+        // Sets the background color for the Activity
         View textViewContainer = listItemView.findViewById(R.id.text_container);
         int color = ContextCompat.getColor(getContext(), mColorResourceID);
         textViewContainer.setBackgroundColor(color);

@@ -27,12 +27,13 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class PhrasesActivity extends AppCompatActivity {
+    // Controls audio playback
     private MediaPlayer miwokPhrasesAudio;
 
-    // Controls audio focus in the numbers activity
+    // Controls audio focus
     private AudioManager mAudioManager;
 
-    // Creating an instance of the change listener and modify the focus change
+    // Controls playback according to audio focus
     AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener =
             new AudioManager.OnAudioFocusChangeListener() {
                 public void onAudioFocusChange(int focusChange) {
@@ -51,6 +52,7 @@ public class PhrasesActivity extends AppCompatActivity {
                 }
             };
 
+    // Listens for completion of audio file, then releases the MediaPlayer
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -66,7 +68,7 @@ public class PhrasesActivity extends AppCompatActivity {
         // Initialize the audio manager
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        // Phrases
+        // Miwok and Default (English) Phrases vocab list
         final ArrayList<Word> phrases = new ArrayList<Word>();
         phrases.add(new Word("minto wuksus", "Where are you going?", R.raw.phrase_where_are_you_going));
         phrases.add(new Word("tinnә oyaase'nә", "What is your name?", R.raw.phrase_what_is_your_name));
@@ -83,7 +85,7 @@ public class PhrasesActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(phraseAdapter);
 
-        // Audio
+        // Audio playback when user clicks the TextView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
